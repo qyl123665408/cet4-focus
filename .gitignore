@@ -11,4 +11,5 @@ Thumbs.db
 .gradle-native/
 .android-user/
 android-app/.gradle/
+android-app/build/
 android-app/app/build/
