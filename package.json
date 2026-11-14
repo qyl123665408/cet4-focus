@@ -1,0 +1,15 @@
+{
+  "name": "cet4-focus",
+  "version": "0.1.0",
+  "private": true,
+  "description": "可持续更新的大学英语四级学习工具",
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/server.mjs --root . --port 4173",
+    "build": "node scripts/build.mjs",
+    "preview": "node scripts/server.mjs --root dist --port 4174"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
