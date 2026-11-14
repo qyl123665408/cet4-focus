@@ -6,3 +6,9 @@ Thumbs.db
 .env
 .env.*
 !.env.example
+.gradle/
+.gradle-cache-local/
+.gradle-native/
+.android-user/
+android-app/.gradle/
+android-app/app/build/

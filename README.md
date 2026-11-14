@@ -1,6 +1,6 @@
 # 四级 Focus
 
-四级 Focus 是一个本地优先、可以持续更新的大学英语四级学习工具。它包含四级全部主要题型、词汇库、真题精选、错题记录和学习统计。项目采用原生 HTML/CSS/JavaScript，部署到 GitHub Pages 后可以直接在浏览器使用，也可以安装成 PWA。
+四级 Focus 是一个本地优先、可以持续更新的大学英语四级学习工具。它包含四级全部主要题型、词汇库、真题精选、错题记录和学习统计。项目采用原生 HTML/CSS/JavaScript 作为内容层，同时提供 Android APK 壳，部署到 GitHub Pages 后可以直接在浏览器使用，也可以构建 APK。
 
 ## 本地运行
 
@@ -20,6 +20,16 @@ npm run preview
 ```
 
 构建结果在 `dist/`，GitHub Pages 工作流会自动构建并发布它。
+
+## 构建 APK
+
+Android 工程在 `android-app/`，会把网页内容打包到 APK 内，断网也可以使用已打包的词库和题目。需要 Java 17 或更高版本、Android SDK 和 Gradle 9.1.0。
+
+```powershell
+npm run build:apk
+```
+
+APK 输出在 `android-app/app/build/outputs/apk/debug/app-debug.apk`。以后修改网页、词库或题库后，先运行 `npm run sync:android`，再构建 APK；GitHub Actions 会在推送到 `main` 后自动生成可下载的 APK artifact。
 
 ## 如何更新内容
 

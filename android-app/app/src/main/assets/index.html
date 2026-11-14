@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f4f1e9">
+  <meta name="description" content="词汇、题型训练和四级真题的本地优先学习工具">
+  <title>四级 Focus</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-mark">C4</span><div><strong>四级 Focus</strong><small>你的 CET-4 训练台</small></div></div>
+      <nav class="nav-list" aria-label="主导航">
+        <button class="nav-item active" data-tab="home"><span>⌂</span>今日学习</button>
+        <button class="nav-item" data-tab="practice"><span>✓</span>专项训练</button>
+        <button class="nav-item" data-tab="real"><span>▣</span>真题中心</button>
+        <button class="nav-item" data-tab="vocab"><span>Aa</span>词汇库</button>
+      </nav>
+      <div class="sidebar-note"><span class="note-dot"></span><div><b>本地优先</b><small>学习进度保存在此浏览器，不上传你的数据。</small></div></div>
+      <div class="sidebar-footer">PDF 词库 · 4,449 词<br>题型按四级试卷结构整理</div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div><p class="eyebrow">SATURDAY · 14 NOV 2026</p><h1 id="pageTitle">今天，先完成一小组</h1></div>
+        <div class="top-actions"><button id="resetProgress" class="icon-btn" title="重置本地进度">↺</button><span class="avatar">C4</span></div>
+      </header>
+
+      <section id="tab-home" class="tab-panel active">
+        <div class="hero-grid">
+          <div class="hero-card">
+            <div class="hero-copy"><p class="eyebrow warm">TODAY'S FOCUS</p><h2>把今天的 20 分钟<br>变成明天的分数。</h2><p>从错题和高频词开始，按你的节奏练习。</p><button class="primary-btn" data-action="start-daily">开始今日训练 <span>→</span></button></div>
+            <div class="hero-orbit" aria-hidden="true"><div class="orbit-ring ring-1"></div><div class="orbit-ring ring-2"></div><div class="orbit-core">20<br><small>MIN</small></div></div>
+          </div>
+          <div class="stats-stack">
+            <div class="stat-card"><span>连续学习</span><strong id="streakStat">0</strong><small>天</small><i class="stat-line mint"></i></div>
+            <div class="stat-card"><span>词汇掌握</span><strong id="masteryStat">0</strong><small>%</small><i class="stat-line gold"></i></div>
+            <div class="stat-card"><span>训练正确率</span><strong id="accuracyStat">--</strong><small id="accuracyUnit"></small><i class="stat-line ink"></i></div>
+          </div>
+        </div>
+
+        <div class="section-head"><div><p class="eyebrow">YOUR ROUTE</p><h2>四级试卷结构</h2></div><button class="text-btn" data-tab-link="practice">去练习 <span>↗</span></button></div>
+        <div class="structure-grid" id="structureGrid"></div>
+
+        <div class="two-column">
+          <section class="surface"><div class="surface-head"><div><p class="eyebrow">QUICK START</p><h2>今天练什么</h2></div><span class="surface-icon">✦</span></div><div class="quick-list"><button data-action="quick-vocab"><span class="quick-icon blue">Aa</span><div><b>20 个高频词</b><small>来自你的四级词库 · 约 8 分钟</small></div><span>→</span></button><button data-action="quick-real"><span class="quick-icon orange">▣</span><div><b>真题精选 8 题</b><small>2023 年 12 月第 1 套</small></div><span>→</span></button><button data-action="quick-wrong"><span class="quick-icon violet">!</span><div><b>复习错题</b><small id="wrongCount">还没有错题</small></div><span>→</span></button></div></section>
+          <section class="surface"><div class="surface-head"><div><p class="eyebrow">RECENT</p><h2>最近活动</h2></div><span class="surface-icon">◷</span></div><div id="recentList" class="recent-list"><p class="empty-state">完成一次训练后，这里会出现你的复盘记录。</p></div></section>
+        </div>
+      </section>
+
+      <section id="tab-practice" class="tab-panel">
+        <div class="section-head"><div><p class="eyebrow">PRACTICE LAB</p><h2>按题型练，按弱项补</h2><p class="section-subtitle">可单选或多选题型；听力题支持浏览器朗读。</p></div><span class="session-badge">本地训练</span></div>
+        <div id="practiceSetup" class="practice-layout">
+          <section class="surface setup-main"><div class="setup-row"><div><p class="eyebrow">STEP 01</p><h3>选择训练范围</h3></div><div class="mode-switch"><button class="mode-btn active" data-mode="practice">专项题</button><button class="mode-btn" data-mode="real">真题精选</button></div></div><div id="typePicker" class="type-picker"></div><div class="setup-controls"><label>题量<select id="questionCount"><option value="5">5 题 · 快速热身</option><option value="10" selected>10 题 · 标准训练</option><option value="20">20 题 · 集中训练</option></select></label><label class="check-label"><input type="checkbox" id="shuffleToggle" checked> 每次随机抽题</label></div><button id="startPractice" class="primary-btn wide">开始训练 <span>→</span></button></section>
+          <aside class="surface setup-side"><p class="eyebrow">SCORING MAP</p><h3>四级怎么计分</h3><div class="score-list"><div><span>写作</span><b>15%</b></div><div><span>听力</span><b>25%</b></div><div><span>阅读</span><b>35%</b></div><div><span>翻译</span><b>15%</b></div></div><p class="muted-note">应用内把听力拆成新闻、长对话、短文；阅读拆成三种常见题型。</p></aside>
+        </div>
+        <div id="questionStage" class="question-stage hidden"></div>
+      </section>
+
+      <section id="tab-real" class="tab-panel">
+        <div class="section-head"><div><p class="eyebrow">REAL EXAMS</p><h2>真题中心</h2><p class="section-subtitle">本地保留精选题，完整试卷可直接打开原始来源。</p></div><span class="session-badge orange-badge">真题精选</span></div>
+        <div class="real-grid"><section class="surface real-hero"><p class="eyebrow warm">2023 · 12</p><h3>第 1 套真题精选</h3><p>覆盖写作、三类听力、三类阅读和翻译。先做本地精选，再用完整卷计时。</p><button class="primary-btn" data-action="start-real">开始真题精选 <span>→</span></button></section><section class="surface"><div class="surface-head"><div><p class="eyebrow">ONLINE PAPERS</p><h3>完整试卷入口</h3></div><span class="surface-icon">↗</span></div><div id="examLinks" class="link-list"></div></section></div>
+        <div class="section-head compact"><div><p class="eyebrow">LOCAL PICKS</p><h2>本地精选题</h2></div><span id="realCount" class="muted-note"></span></div><div id="realList" class="real-list"></div>
+      </section>
+
+      <section id="tab-vocab" class="tab-panel">
+        <div class="section-head"><div><p class="eyebrow">VOCABULARY DECK</p><h2>四级词汇库</h2><p class="section-subtitle">来自 D 盘 PDF 的 4,449 个词条，支持搜索、发音、收藏和掌握标记。</p></div><span class="session-badge mint-badge">4,449 词</span></div>
+        <div class="vocab-toolbar surface"><div class="search-box"><span>⌕</span><input id="vocabSearch" type="search" placeholder="搜索单词、音标或中文释义"></div><div class="vocab-filters"><button class="filter-btn active" data-vocab-filter="all">全部</button><button class="filter-btn" data-vocab-filter="starred">收藏</button><button class="filter-btn" data-vocab-filter="mastered">已掌握</button><button class="filter-btn" data-vocab-filter="unfamiliar">待复习</button></div></div>
+        <div class="vocab-layout"><section><div id="vocabList" class="vocab-list"></div><div id="vocabPager" class="pager"></div></section><aside class="surface word-focus"><p class="eyebrow">WORD FOCUS</p><div id="wordFocus" class="focus-empty">点击左侧词条，查看完整释义。</div></aside></div>
+      </section>
+
+      <footer class="app-footer">四级 Focus · 本地学习工具 · <span>词库来源：大学英语四级词汇带音标-乱序版.pdf</span> · <span id="appVersion">版本加载中</span></footer>
+    </main>
+  </div>
+  <div id="updateNotice" class="update-notice hidden" role="status">
+    <span>发现四级 Focus 新版本</span>
+    <button id="applyUpdate" type="button">立即更新</button>
+  </div>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -7,6 +7,8 @@
   "scripts": {
     "dev": "node scripts/server.mjs --root . --port 4173",
     "build": "node scripts/build.mjs",
+    "sync:android": "node scripts/sync_android_assets.mjs",
+    "build:apk": "npm run sync:android && gradle -p android-app assembleDebug",
     "preview": "node scripts/server.mjs --root dist --port 4174"
   },
   "engines": {
