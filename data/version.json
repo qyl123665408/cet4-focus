@@ -1,10 +1,10 @@
 {
-  "name": "四级 Focus",
-  "version": "0.1.0",
-  "dataVersion": "2026.11.14",
-  "updatedAt": "2026-11-14",
+  "name": "Study",
+  "version": "0.1.1",
+  "dataVersion": "2026.11.15",
+  "updatedAt": "2026-11-15",
   "changelog": [
-    "首个可更新版本",
+    "应用更名为 Study",
     "整理四级词库、题型练习和真题精选"
   ]
 }
