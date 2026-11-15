@@ -14,13 +14,17 @@
       "id":"p-writing-01","type":"writing","mode":"practice","title":"校园活动：写出印象",
       "prompt":"Suppose your university newspaper is inviting submissions from students about a campus event that impressed them most. Write an essay of 120–180 words.",
       "hint":"建议结构：点明活动 → 描述两个细节 → 说明影响。",
-      "checklist":["观点清楚","至少两个具体细节","连接词自然","结尾回扣主题"]
+      "checklist":["观点清楚","至少两个具体细节","连接词自然","结尾回扣主题"],
+      "rubric":["切题并清楚说明活动","细节具体且组织连贯","语法、词汇和拼写准确"],
+      "referenceAnswer":"Last spring, our university held a second-hand book fair in the central square. I joined it as a volunteer, and the event impressed me more than I expected. Before the fair opened, we sorted donated books by subject and placed them on long tables. Students could exchange books for a small contribution, so many useful titles found new readers instead of being thrown away. I helped visitors find books and recorded the money collected. One first-year student told me she had found a biology textbook she could not afford to buy new. Her smile reminded me that a campus activity can make a practical difference. The remaining books were later donated to a community reading room. The fair brought students together, encouraged reuse, and helped people who needed books. It showed me that a simple event can benefit the whole community."
     },
     {
       "id":"p-writing-02","type":"writing","mode":"practice","title":"大学图书馆是否向公众开放",
       "prompt":"Suppose your university is seeking students’ opinions on whether university libraries should be open to the public. Write an essay to express your view in 120–180 words.",
       "hint":"可用让步结构：Although..., I believe... because...",
-      "checklist":["明确支持或反对","给出两条理由","处理潜在反方观点","使用正式语气"]
+      "checklist":["明确支持或反对","给出两条理由","处理潜在反方观点","使用正式语气"],
+      "rubric":["立场明确并回应题目","论据充分、段落衔接自然","语言表达准确并保持正式语气"],
+      "referenceAnswer":"I believe university libraries should be open to the public at certain times. First, universities hold valuable books, journals and digital resources that can benefit local residents, teachers and high school students. Allowing the public to use selected collections would help share knowledge beyond the campus. Second, public access could strengthen the relationship between a university and its community. Visitors might attend reading events or exhibitions and learn more about the university's work. Of course, libraries must remain quiet and protect students' access to study space. The university could address these concerns by requiring advance registration, limiting visitor numbers and reserving some floors for students during examination periods. These measures would make access manageable. A university library is part of an educational community, and sharing its resources responsibly can create benefits for both students and the public."
     },
     {
       "id":"p-news-01","type":"listening-news","mode":"practice","title":"城市公共交通",
@@ -61,13 +65,17 @@
       "id":"p-translation-01","type":"translation","mode":"practice","title":"中国传统节日",
       "prompt":"中国人十分重视传统节日。节日不仅让家人团聚，也帮助年轻人了解历史和文化。近年来，许多城市通过展览、灯会和社区活动，让传统节日在现代生活中焕发活力。",
       "hint":"注意“not only...but also...”和“in recent years”的使用。",
-      "checklist":["时态准确","连接词清楚","专有名词首字母大写","句子不要逐字硬译"]
+      "checklist":["时态准确","连接词清楚","专有名词首字母大写","句子不要逐字硬译"],
+      "rubric":["准确表达重视、团聚和文化传承","正确处理 not only...but also... 结构","表达自然，时态和拼写基本准确"],
+      "referenceAnswer":"Chinese people attach great importance to traditional festivals. These festivals not only bring family members together, but also help young people learn about history and culture. In recent years, many cities have brought traditional festivals to life in modern society through exhibitions, lantern fairs and community activities."
     },
     {
       "id":"r-writing-2023-12-1","type":"writing","mode":"real","exam":"2023年12月 第1套","title":"真题写作：印象最深的校园活动",
       "prompt":"Suppose the university newspaper is inviting submissions from the students for its coming edition on a campus event that has impressed them most. Write an essay of 120–180 words.",
       "source":"2023年12月四级第1套真题","sourceUrl":"https://eol.nju.edu.cn/cet4/papers/2023%E5%B9%B412%E6%9C%88%E8%8B%B1%E8%AF%AD%E5%9B%9B%E7%BA%A7%E7%9C%9F%E9%A2%98%20-%20%E7%AC%AC1%E5%A5%97.pdf",
-      "hint":"真题主观题：先独立写作，再对照评分标准复盘。","checklist":["120–180 words","描述一个校园活动","细节具体","结尾有影响或感受"]
+      "hint":"真题主观题：先独立写作，再对照评分标准复盘。","checklist":["120–180 words","描述一个校园活动","细节具体","结尾有影响或感受"],
+      "rubric":["切题并清楚说明活动","细节具体且组织连贯","语法、词汇和拼写准确"],
+      "referenceAnswer":"Last month, our university organized a cultural festival that left a deep impression on me. Student groups prepared performances, food stalls and displays about traditions from different regions. I helped at a booth introducing paper-cutting. At first, I worried that few people would be interested, but many students stopped to try it. We showed them how to fold the paper and cut simple patterns. One international student made a red flower and said she wanted to take it home as a souvenir. The festival was enjoyable, but it also gave students a chance to learn from one another. I met people outside my usual circle and discovered how much creativity exists on campus. What impressed me most was the friendly atmosphere: everyone was willing to share a skill or story. The event made our university feel more welcoming and connected."
     },
     {
       "id":"r-news-2023-12-1","type":"listening-news","mode":"real","exam":"2023年12月 第1套","title":"真题听力新闻：双胞胎研究",
@@ -96,8 +104,7 @@
       "id":"r-detail-2023-12-1","type":"reading-detail","mode":"real","exam":"2023年12月 第1套","title":"真题仔细阅读：忙碌文化","passage":"Busy people are perceived to be of high status, but working long hours does not automatically drive better results and can make work-life balance difficult.","prompt":"Why do we tend to think that busy people are of high status?","options":["A) Our status can be attributed to our social mobility.","B) We hold the belief that hard work leads to success.","C) Our own opportunity for success never comes easily.","D) We find few people of high status have time for leisure."],"answer":"B","source":"2023年12月四级第1套第47题","sourceUrl":"https://eol.nju.edu.cn/cet4/papers/2023%E5%B9%B412%E6%9C%88%E8%8B%B1%E8%AF%AD%E5%9B%9B%E7%BA%A7%E7%9C%9F%E9%A2%98%20-%20%E7%AC%AC1%E5%A5%97.pdf"
     },
     {
-      "id":"r-translation-2023-12-1","type":"translation","mode":"real","exam":"2023年12月 第1套","title":"真题翻译：健康饮食","prompt":"中国政府十分重视人民的健康饮食。通过大力提倡健康饮食，人们对合理营养增进健康的重要性有了更加深刻的认识。","hint":"先处理“通过大力提倡……”的方式状语，再处理“对……重要性有了认识”的主句。","source":"2023年12月四级第1套翻译","sourceUrl":"https://eol.nju.edu.cn/cet4/papers/2023%E5%B9%B412%E6%9C%88%E8%8B%B1%E8%AF%AD%E5%9B%9B%E7%BA%A7%E7%9C%9F%E9%A2%98%20-%20%E7%AC%AC1%E5%A5%97.pdf"
-    }
+      "id":"r-translation-2023-12-1","type":"translation","mode":"real","exam":"2023年12月 第1套","title":"真题翻译：健康饮食","prompt":"中国政府十分重视人民的健康饮食。通过大力提倡健康饮食，人们对合理营养增进健康的重要性有了更加深刻的认识。","hint":"先处理“通过大力提倡……”的方式状语，再处理“对……重要性有了认识”的主句。","source":"2023年12月四级第1套翻译","sourceUrl":"https://eol.nju.edu.cn/cet4/papers/2023%E5%B9%B412%E6%9C%88%E8%8B%B1%E8%AF%AD%E5%9B%9B%E7%BA%A7%E7%9C%9F%E9%A2%98%20-%20%E7%AC%AC1%E5%A5%97.pdf","checklist":["关键信息完整","中英文逻辑关系准确","句子自然、语法正确"],"rubric":["正确表达重视健康饮食","准确传达倡导与认识加深的逻辑关系","句子自然，词汇和语法基本准确"],"referenceAnswer":"The Chinese government attaches great importance to people's healthy diets. By promoting healthy eating, people have gained a deeper understanding of the importance of proper nutrition to good health."}
   ],
   "examLinks":[
     {"label":"2023年12月 第1套","url":"https://eol.nju.edu.cn/cet4/papers/2023%E5%B9%B412%E6%9C%88%E8%8B%B1%E8%AF%AD%E5%9B%9B%E7%BA%A7%E7%9C%9F%E9%A2%98%20-%20%E7%AC%AC1%E5%A5%97.pdf","note":"本地已放入精选题；完整卷在线打开"},
