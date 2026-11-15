@@ -416,6 +416,7 @@ public class MainActivity extends Activity {
     }
 
     private void renderCourse() {
+        addActionCard(body, "原书阅读 · 重点与讲解", "导入完整 PDF 后离线逐页阅读；框选重点、写批注，并查看对应章节讲解。", "打开原书", () -> startActivity(new Intent(this, BookReaderActivity.class)));
         String subtitle = activeCourse.optString("subtitle", "");
         if (!subtitle.isEmpty()) addText(body, subtitle, 14, MUTED, false);
         int completedCount = 0;
@@ -504,6 +505,8 @@ public class MainActivity extends Activity {
         addText(body, lesson.optString("title"), 25, INK, true);
         addText(body, lesson.optString("englishTitle"), 14, MUTED, false);
         addText(body, "教材页码：" + lesson.optString("pages", "未标注") + " · " + lesson.optString("topic", ""), 12, MUTED, false);
+        Button readBook = secondaryButton("阅读本章原书 / 标记重点", () -> startActivity(new Intent(this, BookReaderActivity.class).putExtra("lessonId", activeLessonId)));
+        addViewWithTopMargin(body, readBook, 8);
         addSectionTitle(body, "本章目标");
         addText(body, lesson.optString("summary"), 15, INK, false);
         addSectionTitle(body, "知识讲解");

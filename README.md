@@ -36,6 +36,10 @@ APK 输出在 `android-app/app/build/outputs/apk/debug/Study.apk`。推送到 `m
 
 应用启动或重新切回前台时会自动检查 GitHub 上的新课程；顶部“更新”按钮也可以手动检查。新增课程时，将课程 JSON 放入 `data/modules/`、登记到 `data/modules/index.json`，并递增 `data/version.json` 的 `dataVersion`；提交并推送到 `main` 后，已安装应用会下载新课程并将其保存在设备，联网失败时仍可离线学习。仅课程数据更新不需要重新安装 APK；Android 原生界面或功能变化需要安装新版 APK。APK 从公开 GitHub 仓库下载更新数据。
 
+## 原书与重点讲解
+
+汇编课程当前的43章是原创辅助笔记，不是教材全文。Android「原书阅读」支持从本机导入有权使用的完整 PDF，离线翻页、缩放、跳转、标记重点、编辑批注和恢复阅读位置。先校准正文第1页对应的 PDF 页数，再使用章节定位和章节讲解；目录页码以中文第一版为准。现有讲解为按章辅助内容，不会自动分析 PDF 每一页。原书不会随 APK 上传公开 GitHub；原书及批注只保存在设备本地，卸载后会删除。原书来源核对与验收限制见 [说明](docs/original-book-reader.md)。
+
 ## 如何更新内容
 
 - 词汇：替换或重新生成 `data/vocab.json`。原始 PDF 解析脚本是 `scripts/extract_vocab.py`。

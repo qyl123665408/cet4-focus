@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "id": "x64-assembly",
   "title": "x64 汇编语言：从新手到 AVX 专家",
-  "subtitle": "完整对应教材 43 章；主题只用于筛选，不改变学习顺序",
+  "subtitle": "教材 43 章配套笔记；原书全文需另行导入 PDF",
   "level": "入门至进阶",
   "description": "按教材 43 章顺序学习。每章含概念讲解、例题推演、两道练习及解析和知识回看，覆盖 Linux/NASM、调试、数据与控制流、函数、C 互操作、SIMD/SSE/AVX 和 Windows API。",
   "studyMinutes": 15,
