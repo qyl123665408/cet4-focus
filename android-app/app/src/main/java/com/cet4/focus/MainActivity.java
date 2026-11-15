@@ -856,6 +856,10 @@ public class MainActivity extends Activity {
             addText(feedback, quizAnswerCorrect == null ? "已记录" : quizAnswerCorrect ? "回答正确" : "参考答案", 16, color, true);
             addText(feedback, quizFeedback, 14, INK, false);
             if (!quizExplanation.isEmpty()) addText(feedback, quizExplanation, 13, MUTED, false);
+            addViewWithTopMargin(feedback, secondaryButton("AI 讲解 / 追问", () -> {
+                String given = !quizInputValue.isEmpty() ? quizInputValue : !selectedMatches.isEmpty() ? selectedMatches.toString() : selectedOption;
+                startActivity(new Intent(this, AiTutorActivity.class).putExtra("question_context", AiPrompt.context(item, given)));
+            }), 8);
             if (!item.optString("hint", "").isEmpty()) addText(feedback, "提示：" + item.optString("hint"), 13, MUTED, false);
             String answerSource = item.optString("answerSourceUrl");
             if (!answerSource.isEmpty()) addViewWithTopMargin(feedback, secondaryButton("打开来源答案解析 PDF", () -> openUrl(answerSource)), 8);
@@ -1319,10 +1323,11 @@ public class MainActivity extends Activity {
     }
 
     private void showMoreMenu() {
-        String[] options = {"检查更新", "重置学习进度", "关于 Study"};
+        String[] options = {"AI 接口设置", "检查更新", "重置学习进度", "关于 Study"};
         new AlertDialog.Builder(this).setItems(options, (dialog, which) -> {
-            if (which == 0) checkUpdates(true);
-            else if (which == 1) confirmResetProgress();
+            if (which == 0) startActivity(new Intent(this, AiTutorActivity.class).putExtra("settings_only", true));
+            else if (which == 1) checkUpdates(true);
+            else if (which == 2) confirmResetProgress();
             else new AlertDialog.Builder(this).setTitle("Study " + installedVersion())
                     .setMessage("本地学习工具 · 支持离线课程和进度记录")
                     .setPositiveButton("知道了", null).show();
