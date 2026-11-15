@@ -92,6 +92,22 @@ for (const item of cet4.items || []) {
   }
 }
 
+const reading = await readJson('data/reading-sources.json');
+const paperIds = new Set();
+let readingCount = 0;
+for (const exam of reading.exams || []) {
+  if (!/^[0-9]{6}-[1-3]$/.test(exam.id) || paperIds.has(exam.id)) fail('reading: invalid or duplicate paper ' + exam.id);
+  paperIds.add(exam.id);
+  if (exam.questionCount !== 30) fail('reading/' + exam.id + ': expected 30 small questions');
+  readingCount += exam.questionCount;
+  if (!/^[a-f0-9]{64}$/.test(exam.sourceSha256)) fail('reading/' + exam.id + ': invalid SHA-256');
+  if (exam.sourceUrl !== 'https://eol.nju.edu.cn/cet4/papers/' + exam.id + '.html') fail('reading/' + exam.id + ': unexpected HTML source');
+  for (const key of ['paperUrl', 'answerSourceUrl']) {
+    if (!exam[key]?.startsWith('https://eol.nju.edu.cn/cet4/papers/') || !exam[key].endsWith('.pdf')) fail('reading/' + exam.id + ': missing PDF source');
+  }
+}
+if (readingCount !== reading.smallQuestionCount || paperIds.size * 4 !== reading.passageCount || readingCount !== 240) fail('reading: inconsistent published counts');
+
 if (errors.length) {
   console.error('Content validation failed (' + errors.length + ' issue' + (errors.length === 1 ? '' : 's') + '):');
   for (const error of errors) console.error('- ' + error);

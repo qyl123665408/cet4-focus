@@ -7,7 +7,7 @@ const destination = path.join(root, 'android-app', 'app', 'src', 'main', 'assets
 
 await fs.rm(destination, { recursive: true, force: true });
 await fs.mkdir(path.join(destination, 'data', 'modules'), { recursive: true });
-for (const file of ['version.json', 'questions.json', 'vocab.json']) {
+for (const file of ['version.json', 'questions.json', 'vocab.json', 'reading-sources.json']) {
   await fs.copyFile(path.join(sourceData, file), path.join(destination, 'data', file));
 }
 await fs.copyFile(path.join(sourceData, 'modules', 'index.json'), path.join(destination, 'data', 'modules', 'index.json'));
