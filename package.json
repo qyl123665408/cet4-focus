@@ -1,14 +1,15 @@
 {
-  "name": "cet4-focus",
-  "version": "0.1.0",
+  "name": "study-learning-app",
+  "version": "0.2.6",
   "private": true,
-  "description": "可持续更新的大学英语四级学习工具",
+  "description": "可持续更新的多模块学习应用",
   "type": "module",
   "scripts": {
     "dev": "node scripts/server.mjs --root . --port 4173",
-    "build": "node scripts/build.mjs",
+    "validate": "node scripts/validate-content.mjs",
+    "build": "npm run validate && node scripts/build.mjs",
     "sync:android": "node scripts/sync_android_assets.mjs",
-    "build:apk": "npm run sync:android && gradle -p android-app assembleDebug",
+    "build:apk": "npm run validate && npm run sync:android && gradle -p android-app assembleDebug && node scripts/name-apk.mjs",
     "preview": "node scripts/server.mjs --root dist --port 4174"
   },
   "engines": {

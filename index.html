@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#f4f1e9">
-  <meta name="description" content="词汇、题型训练和四级真题的本地优先学习工具">
+  <meta name="description" content="包含英语四级与汇编课程的可持续更新学习工具">
   <title>Study</title>
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -13,24 +13,34 @@
 <body>
   <div class="app-shell">
     <aside class="sidebar">
-      <div class="brand"><span class="brand-mark">C4</span><div><strong>Study</strong><small>你的 CET-4 训练台</small></div></div>
+      <div class="brand"><span class="brand-mark">S</span><div><strong>Study</strong><small>多模块学习工具</small></div></div>
       <nav class="nav-list" aria-label="主导航">
-        <button class="nav-item active" data-tab="home"><span>⌂</span>今日学习</button>
+        <button class="nav-item active" data-tab="modules"><span>▦</span>学习模块</button>
+        <button class="nav-item" data-tab="home"><span>⌂</span>四级首页</button>
         <button class="nav-item" data-tab="practice"><span>✓</span>专项训练</button>
         <button class="nav-item" data-tab="real"><span>▣</span>真题中心</button>
         <button class="nav-item" data-tab="vocab"><span>Aa</span>词汇库</button>
       </nav>
-      <div class="sidebar-note"><span class="note-dot"></span><div><b>本地优先</b><small>学习进度保存在此浏览器，不上传你的数据。</small></div></div>
-      <div class="sidebar-footer">PDF 词库 · 4,449 词<br>题型按四级试卷结构整理</div>
+      <div class="sidebar-note"><span class="note-dot"></span><div><b>本地优先</b><small>学习进度保存在此设备，不上传你的数据。</small></div></div>
+      <div class="sidebar-footer">课程按模块独立管理<br>内容可持续扩展</div>
     </aside>
 
     <main class="main">
       <header class="topbar">
-        <div><p class="eyebrow">SATURDAY · 14 NOV 2026</p><h1 id="pageTitle">今天，先完成一小组</h1></div>
-        <div class="top-actions"><button id="resetProgress" class="icon-btn" title="重置本地进度">↺</button><span class="avatar">C4</span></div>
+        <div><p class="eyebrow">STUDY · LEARNING HUB</p><h1 id="pageTitle">学习模块</h1></div>
+        <div class="top-actions"><button id="checkUpdates" class="icon-btn" type="button" title="检查课程更新" aria-label="检查课程更新">⟳</button><button id="resetProgress" class="icon-btn" title="重置本地进度">↺</button><span class="avatar">C4</span></div>
       </header>
 
-      <section id="tab-home" class="tab-panel active">
+      <section id="tab-modules" class="tab-panel active">
+        <div class="section-head module-heading"><div><p class="eyebrow">YOUR MODULES</p><h2>选择学习方向</h2><p class="section-subtitle">每个模块独立整理知识与练习，后续课程会继续添加到这里。</p></div><span id="moduleCount" class="session-badge"></span></div>
+        <div id="moduleGrid" class="module-grid"><p class="empty-state">正在加载课程…</p></div>
+      </section>
+
+      <section id="tab-course" class="tab-panel">
+        <div id="courseContent" class="course-content"></div>
+      </section>
+
+      <section id="tab-home" class="tab-panel">
         <div class="hero-grid">
           <div class="hero-card">
             <div class="hero-copy"><p class="eyebrow warm">TODAY'S FOCUS</p><h2>把今天的 20 分钟<br>变成明天的分数。</h2><p>从错题和高频词开始，按你的节奏练习。</p><button class="primary-btn" data-action="start-daily">开始今日训练 <span>→</span></button></div>
@@ -77,8 +87,8 @@
     </main>
   </div>
   <div id="updateNotice" class="update-notice hidden" role="status">
-    <span>发现 Study 新版本</span>
-    <button id="applyUpdate" type="button">立即更新</button>
+    <span id="updateNoticeMessage">发现网页更新</span>
+    <button id="applyUpdate" type="button">重新加载</button>
   </div>
   <div id="toast" class="toast" role="status"></div>
   <script src="app.js"></script>
