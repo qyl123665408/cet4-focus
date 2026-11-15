@@ -1,0 +1,26 @@
+{
+  "modules": [
+    {
+      "id": "x64-assembly",
+      "title": "x64 汇编入门",
+      "shortTitle": "汇编",
+      "description": "43 章逐章讲解，附例题推演与带解析练习；主题仅用于筛选。",
+      "kind": "course",
+      "icon": "ASM",
+      "color": "blue",
+      "actionLabel": "开始学习",
+      "file": "data/modules/x64-assembly.json"
+    },
+    {
+      "id": "cet4",
+      "title": "大学英语四级",
+      "shortTitle": "英语四级",
+      "description": "四级词汇、全部主要题型、专项训练与真题精选。",
+      "kind": "native",
+      "icon": "Aa",
+      "color": "mint",
+      "actionLabel": "进入四级学习",
+      "tab": "home"
+    }
+  ]
+}
