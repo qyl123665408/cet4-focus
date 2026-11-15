@@ -1,4 +1,4 @@
-const CACHE_NAME = 'cet4-focus-v0.1.0';
+const CACHE_NAME = 'study-v0.2.6';
 const APP_SHELL = [
   './',
   './index.html',
@@ -8,7 +8,9 @@ const APP_SHELL = [
   './favicon.svg',
   './data/questions.json',
   './data/vocab.json',
-  './data/version.json'
+  './data/version.json',
+  './data/modules/index.json',
+  './data/modules/x64-assembly.json'
 ];
 
 self.addEventListener('install', (event) => {
@@ -31,6 +33,11 @@ self.addEventListener('fetch', (event) => {
   const request = event.request;
   if (request.method !== 'GET') return;
   const url = new URL(request.url);
+  if (url.origin !== self.location.origin) {
+    if (request.mode === 'navigate') return;
+    event.respondWith(fetch(request));
+    return;
+  }
   if (url.pathname.endsWith('.json')) {
     event.respondWith(
       fetch(request, { cache: 'no-store' })
