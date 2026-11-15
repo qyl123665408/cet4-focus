@@ -64,6 +64,9 @@ public class MainActivity extends Activity {
     private TextToSpeech textToSpeech;
     private boolean ttsReady;
     private boolean checkingUpdates;
+    private boolean downloadingReading;
+    private String readingDownloadStatus = "";
+    private JSONObject readingSources = new JSONObject();
     private android.window.OnBackInvokedCallback backCallback;
 
     private LinearLayout root;
@@ -245,6 +248,14 @@ public class MainActivity extends Activity {
             questionTypes = questionData.optJSONArray("types") == null ? new JSONArray() : questionData.optJSONArray("types");
             examLinks = questionData.optJSONArray("examLinks") == null ? new JSONArray() : questionData.optJSONArray("examLinks");
             vocabulary = repository.readArray("data/vocab.json");
+            try {
+                readingSources = repository.readJson("data/reading-sources.json");
+                JSONArray downloaded = repository.savedReadingQuestions();
+                for (int i = 0; i < downloaded.length(); i++) questionItems.put(downloaded.getJSONObject(i));
+            } catch (Exception error) {
+                readingSources = new JSONObject();
+                toast("阅读资料目录暂时无法读取，可检查更新后重试。");
+            }
         } catch (Exception error) {
             toast("课程文件暂时无法读取：" + error.getMessage());
         }
@@ -387,6 +398,7 @@ public class MainActivity extends Activity {
         addStat(stats, "正确率", totalObjectiveAnswers == 0 ? "--" : String.valueOf(Math.round(correctObjectiveAnswers * 100f / totalObjectiveAnswers)), totalObjectiveAnswers == 0 ? "" : "%");
 
         addSectionTitle(body, "快速开始");
+        addActionCard(body, "真题阅读 · 240道", "8套阅读，先获取后离线；按套或题型练习", "进入", () -> { page = "real"; render(); });
         addActionCard(body, "今日 5 题", "从四级练习题中抽取一组", "开始", () -> startDailyQuiz());
         addActionCard(body, "复习错题", wrongQuestionIds.size() + " 道待复习题", "复习", () -> startWrongQuiz());
         addActionCard(body, "四级词汇", "搜索、收藏并标记已掌握", "打开", () -> { selectedVocabFilter = "待复习"; vocabPage = 1; page = "vocab"; render(); });
@@ -802,14 +814,24 @@ public class MainActivity extends Activity {
                 if (statement == null) continue;
                 LinearLayout matching = card(body);
                 addText(matching, statement.optInt("number") + ". " + statement.optString("text"), 15, INK, true);
-                Spinner answer = spinner(Arrays.asList("选择段落", "A", "B", "C", "D"));
+                ArrayList<String> paragraphChoices = new ArrayList<>();
+                paragraphChoices.add("选择段落");
+                JSONArray paragraphs = item.optJSONArray("paragraphs");
+                if (paragraphs != null) {
+                    for (int p = 0; p < paragraphs.length(); p++) {
+                        JSONObject paragraph = paragraphs.optJSONObject(p);
+                        if (paragraph != null) paragraphChoices.add(paragraph.optString("id"));
+                    }
+                } else paragraphChoices.addAll(Arrays.asList("A", "B", "C", "D"));
+                Spinner answer = spinner(paragraphChoices);
                 String key = String.valueOf(statement.optInt("number"));
                 String current = selectedMatches.get(key);
-                if (current != null) answer.setSelection(Arrays.asList("选择段落", "A", "B", "C", "D").indexOf(current));
+                if (current != null && paragraphChoices.contains(current)) answer.setSelection(paragraphChoices.indexOf(current));
                 answer.setEnabled(!quizLocked);
                 answer.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
                     @Override public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
                         if (position > 0) selectedMatches.put(key, String.valueOf(parent.getItemAtPosition(position)));
+                        else selectedMatches.remove(key);
                     }
                     @Override public void onNothingSelected(android.widget.AdapterView<?> parent) { }
                 });
@@ -819,7 +841,7 @@ public class MainActivity extends Activity {
         }
 
         if ("reading-cloze".equals(type) || "writing".equals(type) || "translation".equals(type)) {
-            String placeholder = "reading-cloze".equals(type) ? "按空格顺序填写答案；多个答案用 / 分隔" : "在这里写下你的答案";
+            String placeholder = "reading-cloze".equals(type) ? (item.has("questionNumber") ? "填写本题单词或词库字母" : "按空格顺序填写答案；多个答案用 / 分隔") : "在这里写下你的答案";
             int inputType = "reading-cloze".equals(type) ? InputType.TYPE_CLASS_TEXT : InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES;
             activeAnswerInput = editText(placeholder, inputType);
             activeAnswerInput.setMinHeight("reading-cloze".equals(type) ? dp(54) : dp(130));
@@ -835,11 +857,18 @@ public class MainActivity extends Activity {
             addText(feedback, quizFeedback, 14, INK, false);
             if (!quizExplanation.isEmpty()) addText(feedback, quizExplanation, 13, MUTED, false);
             if (!item.optString("hint", "").isEmpty()) addText(feedback, "提示：" + item.optString("hint"), 13, MUTED, false);
+            String answerSource = item.optString("answerSourceUrl");
+            if (!answerSource.isEmpty()) addViewWithTopMargin(feedback, secondaryButton("打开来源答案解析 PDF", () -> openUrl(answerSource)), 8);
+        }
+        String sourceUrl = item.optString("sourceUrl");
+        if (!sourceUrl.isEmpty()) {
+            addText(body, item.optString("source") + " · 来源参考答案", 12, MUTED, false);
+            addViewWithTopMargin(body, secondaryButton("查看来源与原卷", () -> openUrl(sourceUrl)), 8);
         }
 
         LinearLayout actions = new LinearLayout(this);
         actions.setOrientation(LinearLayout.HORIZONTAL);
-        Button quit = secondaryButton("退出", () -> { page = "practice"; render(); });
+        Button quit = secondaryButton("退出", () -> { page = "real".equals(quizMode) ? "real" : "practice"; render(); });
         Button submit = primaryButton(quizLocked ? (quizIndex + 1 >= quizItems.size() ? "查看结果" : "下一题") : "提交答案", () -> {
             if (quizLocked) nextQuizItem(); else submitQuizAnswer();
         });
@@ -919,6 +948,11 @@ public class MainActivity extends Activity {
             String given = "reading-cloze".equals(type) ? normalizeAnswer(quizInputValue) : selectedOption.trim();
             String expected = "reading-cloze".equals(type) ? normalizeAnswer(answer) : answer.trim();
             quizAnswerCorrect = given.equalsIgnoreCase(expected);
+            JSONArray accepted = item.optJSONArray("acceptedAnswers");
+            if ("reading-cloze".equals(type) && accepted != null) {
+                for (int i = 0; i < accepted.length(); i++)
+                    if (given.equalsIgnoreCase(normalizeAnswer(accepted.optString(i)))) quizAnswerCorrect = true;
+            }
             quizFeedback = "参考答案：" + answer;
             quizExplanation = item.optString("explanation", "");
         }
@@ -984,14 +1018,49 @@ public class MainActivity extends Activity {
     }
 
     private void renderReal() {
-        addText(body, "四级真题精选", 22, INK, true);
-        addText(body, "选择一道题查看，也可以开始一组完整的精选练习。", 14, MUTED, false);
-        Button start = primaryButton("开始真题精选 · 8 题", () -> startQuizByMode("real", 8));
-        addViewWithTopMargin(body, start, 12);
-        addSectionTitle(body, "本地精选题");
+        addText(body, "四级真题阅读", 22, INK, true);
+        JSONArray exams = readingSources.optJSONArray("exams");
+        int downloaded = 0;
+        if (exams != null) for (int i = 0; i < exams.length(); i++) {
+            JSONObject exam = exams.optJSONObject(i);
+            if (exam != null) downloaded += readingPaperItems(exam.optString("id"), "").size();
+        }
+        addText(body, (exams == null ? 0 : exams.length()) + " 套 · 可获取 " + readingSources.optInt("smallQuestionCount") + " 道小题 · 已下载 " + downloaded + " 道", 14, GREEN, true);
+        addText(body, "每套30道：选词填空10、段落匹配10、仔细阅读10；共32篇文章。首次从公开来源获取，下载后在本机离线作答。", 14, MUTED, false);
+        addText(body, "答案来自来源整理版，非考试机构官方答案；保留原卷与参考解析入口。", 12, MUTED, false);
+        if (downloadingReading) addText(body, readingDownloadStatus, 14, ORANGE, true);
+        if (exams != null && exams.length() > 0) {
+            ArrayList<JSONObject> missing = new ArrayList<>();
+            for (int i = 0; i < exams.length(); i++) {
+                JSONObject exam = exams.optJSONObject(i);
+                if (exam != null && readingPaperItems(exam.optString("id"), "").size() != 30) missing.add(exam);
+            }
+            Button all = primaryButton(missing.isEmpty() ? "已全部下载 · 随机练习20题" : "获取全部未下载试卷 · " + (missing.size() * 30) + " 题", () -> {
+                if (missing.isEmpty()) startQuizByMode("real", 20);
+                else downloadReadingPapers(missing);
+            });
+            all.setEnabled(!downloadingReading);
+            addViewWithTopMargin(body, all, 12);
+            for (int i = 0; i < exams.length(); i++) {
+                JSONObject exam = exams.optJSONObject(i);
+                if (exam == null) continue;
+                boolean saved = readingPaperItems(exam.optString("id"), "").size() == 30;
+                LinearLayout paper = card(body);
+                addText(paper, exam.optString("exam"), 17, INK, true);
+                addText(paper, "4篇文章 · 30道小题 · " + (saved ? "已下载，可离线" : "尚未下载"), 13, MUTED, false);
+                Button action = primaryButton(saved ? "开始本套阅读" : "获取本套30题", () -> {
+                    if (saved) chooseReadingPractice(exam);
+                    else downloadReadingPapers(new ArrayList<>(Arrays.asList(exam)));
+                });
+                action.setEnabled(saved || !downloadingReading);
+                addViewWithTopMargin(paper, action, 8);
+                addViewWithTopMargin(paper, secondaryButton("查看来源 / 原卷", () -> openUrl(exam.optString("sourceUrl"))), 6);
+            }
+        }
+        addSectionTitle(body, "原有精选摘选");
         for (int i = 0; i < questionItems.length(); i++) {
             JSONObject item = questionItems.optJSONObject(i);
-            if (item == null || !"real".equals(item.optString("mode"))) continue;
+            if (item == null || !"real".equals(item.optString("mode")) || item.optString("id").startsWith("r-")) continue;
             addActionCard(body, item.optString("title", questionTypeLabel(item.optString("type"))), questionTypeLabel(item.optString("type")) + " · " + item.optString("source", item.optString("exam", "精选题")), "练习", () -> {
                 ArrayList<JSONObject> single = new ArrayList<>();
                 single.add(item);
@@ -1013,6 +1082,56 @@ public class MainActivity extends Activity {
             if (item != null && mode.equals(item.optString("mode"))) choices.add(item);
         }
         launchQuiz(choices, mode, count, true);
+    }
+
+    private ArrayList<JSONObject> readingPaperItems(String id, String type) {
+        ArrayList<JSONObject> choices = new ArrayList<>();
+        for (int i = 0; i < questionItems.length(); i++) {
+            JSONObject item = questionItems.optJSONObject(i);
+            if (item != null && item.optString("id").startsWith("r-" + id + "-q")
+                    && (type.isEmpty() || type.equals(item.optString("type")))) choices.add(item);
+        }
+        java.util.Collections.sort(choices, (a, b) -> Integer.compare(a.optInt("questionNumber"), b.optInt("questionNumber")));
+        return choices;
+    }
+
+    private void chooseReadingPractice(JSONObject exam) {
+        String[] labels = {"整套阅读 · 30题", "选词填空 · 10题", "段落匹配 · 10题", "仔细阅读 · 10题"};
+        String[] types = {"", "reading-cloze", "reading-matching", "reading-detail"};
+        new AlertDialog.Builder(this).setTitle(exam.optString("exam")).setItems(labels, (dialog, which) -> {
+            ArrayList<JSONObject> items = readingPaperItems(exam.optString("id"), types[which]);
+            if (items.isEmpty()) { toast("本套文件暂不可用，请重新获取。"); return; }
+            launchQuiz(items, "real", items.size(), false);
+        }).setNegativeButton("取消", null).show();
+    }
+
+    private void downloadReadingPapers(ArrayList<JSONObject> exams) {
+        if (downloadingReading || exams.isEmpty()) return;
+        downloadingReading = true;
+        readingDownloadStatus = "正在获取 " + exams.get(0).optString("exam") + "…";
+        render();
+        new Thread(() -> {
+            int completed = 0;
+            ArrayList<String> errors = new ArrayList<>();
+            for (JSONObject exam : exams) {
+                try { repository.downloadReadingPaper(exam); completed++; }
+                catch (Exception error) { errors.add(exam.optString("exam") + "：" + error.getMessage()); }
+                final int done = completed;
+                runOnUiThread(() -> {
+                    readingDownloadStatus = "已获取 " + done + " / " + exams.size() + " 套…";
+                    if (!isFinishing() && !isDestroyed() && "real".equals(page)) render();
+                });
+            }
+            final int total = completed;
+            runOnUiThread(() -> {
+                downloadingReading = false;
+                if (isFinishing() || isDestroyed()) return;
+                loadContent();
+                if ("real".equals(page)) render();
+                if (errors.isEmpty()) toast("已保存 " + (total * 30) + " 道小题，可断网练习。");
+                else new AlertDialog.Builder(this).setTitle("已完成 " + total + " 套").setMessage("以下试卷未下载成功，可重新获取。已有试卷仍可离线使用。" + android.text.TextUtils.join("；", errors)).setPositiveButton("知道了", null).show();
+            });
+        }, "study-reading-download").start();
     }
 
     private void renderVocabulary() {

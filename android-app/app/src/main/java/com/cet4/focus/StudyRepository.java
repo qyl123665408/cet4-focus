@@ -45,6 +45,50 @@ final class StudyRepository {
         }
     }
 
+    boolean hasReadingPaper(String id) {
+        if (id == null || !id.matches("[0-9]{6}-[1-3]")) return false;
+        try { return contentFile("data/reading-papers/" + id + ".json").isFile(); }
+        catch (IOException ignored) { return false; }
+    }
+
+    JSONArray savedReadingQuestions() throws IOException, JSONException {
+        JSONArray result = new JSONArray();
+        JSONArray exams = readJson("data/reading-sources.json").optJSONArray("exams");
+        if (exams != null) for (int i = 0; i < exams.length(); i++) {
+            JSONObject exam = exams.optJSONObject(i);
+            if (exam == null || !hasReadingPaper(exam.optString("id"))) continue;
+            try {
+                JSONArray items = readArray("data/reading-papers/" + exam.getString("id") + ".json");
+                if (items.length() != 30) continue;
+                boolean valid = true;
+                for (int q = 0; q < items.length(); q++) {
+                    JSONObject item = items.optJSONObject(q);
+                    if (item == null || item.optInt("questionNumber") != q + 26
+                            || !item.optString("id").equals("r-" + exam.getString("id") + "-q" + (q + 26))
+                            || item.optString("passage").isEmpty()) { valid = false; break; }
+                }
+                if (!valid) continue;
+                for (int q = 0; q < items.length(); q++) result.put(items.getJSONObject(q));
+            } catch (IOException | JSONException ignored) { /* A bad local copy can be re-downloaded. */ }
+        }
+        return result;
+    }
+
+    int downloadReadingPaper(JSONObject exam) throws Exception {
+        String id = exam.getString("id");
+        if (!id.matches("[0-9]{6}-[1-3]")) throw new IOException("Invalid exam id");
+        String url = "https://eol.nju.edu.cn/cet4/papers/" + id + ".html";
+        if (!url.equals(exam.getString("sourceUrl"))) throw new IOException("Unexpected source URL");
+        String html = download(url);
+        byte[] digest = java.security.MessageDigest.getInstance("SHA-256").digest(html.getBytes(StandardCharsets.UTF_8));
+        StringBuilder hash = new StringBuilder();
+        for (byte value : digest) hash.append(String.format(java.util.Locale.ROOT, "%02x", value & 255));
+        if (!hash.toString().equalsIgnoreCase(exam.getString("sourceSha256"))) throw new IOException("来源页面已变化，请更新资料目录后重试");
+        JSONArray questions = ReadingPaperParser.parse(html, exam);
+        saveAtomically("data/reading-papers/" + id + ".json", questions.toString());
+        return questions.length();
+    }
+
     String updateContent() throws IOException, JSONException {
         String currentVersion = readJson("data/version.json").optString("dataVersion", "0");
         JSONObject remoteVersion = new JSONObject(download(CONTENT_BASE + "data/version.json"));
@@ -53,6 +97,7 @@ final class StudyRepository {
 
         LinkedHashMap<String, String> updates = new LinkedHashMap<>();
         updates.put("data/questions.json", download(CONTENT_BASE + "data/questions.json"));
+        updates.put("data/reading-sources.json", download(CONTENT_BASE + "data/reading-sources.json"));
         updates.put("data/vocab.json", download(CONTENT_BASE + "data/vocab.json"));
         String indexText = download(CONTENT_BASE + "data/modules/index.json");
         updates.put("data/modules/index.json", indexText);
