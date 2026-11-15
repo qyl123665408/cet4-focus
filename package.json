@@ -1,6 +1,6 @@
 {
   "name": "study-learning-app",
-  "version": "0.2.6",
+  "version": "0.3.0",
   "private": true,
   "description": "可持续更新的多模块学习应用",
   "type": "module",

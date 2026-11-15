@@ -1,6 +1,6 @@
 # Study
 
-Study 是一个本地优先、可以持续更新的多模块学习应用。当前包含大学英语四级和按《x64 汇编语言：从新手到 AVX 专家》教材顺序整理的 43 章汇编课程。汇编课程的主题分类只用于搜索和筛选，不会把教材目录改成五个单元。网页/PWA 与 Android APK 共用内容和交互代码，学习进度保存在设备本地。
+Study 是一个本地优先、可以持续更新的多模块学习应用。当前包含大学英语四级和按《x64 汇编语言：从新手到 AVX 专家》教材顺序整理的 43 章汇编课程。汇编课程的主题分类只用于搜索和筛选，不会把教材目录改成五个单元。网页/PWA 与 Android 应用共用 JSON 课程数据；Android 界面使用原生 Java View，学习进度保存在设备本地。
 
 ## 本地运行
 
@@ -24,15 +24,17 @@ npm.cmd run preview
 
 ## 构建 APK
 
-Android 工程在 `android-app/`，会把网页内容打包到 APK 内，断网也可以使用已打包的词库和题目。需要 Java 17 或更高版本、Android SDK 和 Gradle 9.1.0。
+Android 原生工程在 `android-app/`，会把词库、题目和课程 JSON 打包到 APK 内，断网也可以学习。界面和交互使用 Android 原生控件，不依赖 WebView。需要 Java 17 或更高版本、Android SDK 和 Gradle 9.1.0。
 
 ```powershell
 npm.cmd run build:apk
 ```
 
-APK 输出在 `android-app/app/build/outputs/apk/debug/Study.apk`。本地构建需要 Java 17+、Android SDK 和 Gradle 9.1.0。推送到 `main` 后，GitHub Actions 会检查内容、部署网页并生成保留 30 天的构建 artifact。发布 `v*` 标签会构建同签名 APK 并附加到 GitHub Release，手机端会在启动和回到前台时检查最新 Release，有新版本时显示下载入口。Release 签名使用 `.android-user/debug.keystore`；首次发布前，将该文件的 Base64 内容保存为仓库 Actions Secret `STUDY_DEBUG_KEYSTORE_BASE64`，不要把密钥提交到仓库。GitHub 提交历史保存已提交的源代码版本；Actions artifact 到期后会删除。
+APK 输出在 `android-app/app/build/outputs/apk/debug/Study.apk`。推送到 `main` 后，GitHub Actions 会检查内容、部署网页并生成保留 30 天的 CI artifact。正式分发的 APK 使用本机保存的稳定签名，手动附加到 GitHub Release，签名密钥不上传。仅在仓库已经配置稳定签名 Secret `STUDY_DEBUG_KEYSTORE_BASE64` 时，标签构建才自动发布 APK；没有该 Secret 时只生成 CI 构建包，不能用于覆盖已安装的正式分发版本。GitHub 提交历史保存源代码，Release 保存分发安装包。
 
-应用启动或重新切回前台时会自动检查 GitHub 上的新课程，首页刷新按钮也可以手动检查。新增课程时，将课程 JSON 放入 `data/modules/`、登记到 `data/modules/index.json`，并递增 `data/version.json` 的 `dataVersion`；提交并推送到 `main` 后，已安装应用会下载新课程并将其保存在设备，联网失败时仍可离线学习。仅课程数据更新不需要重新安装 APK；网页代码或应用功能变化仍需重新部署网页或安装新版 APK。APK 从公开 GitHub 仓库下载更新数据。
+手机端会在启动或回到前台时检查 APK 与课程更新，检查成功后六小时内不重复自动检查；顶部“更新”可以随时手动检查。有新 APK 时弹窗进入下载页，用户确认安装；当前不提供关闭 App 后的后台推送。课程和题库保存在应用私有目录，联网下载更新后可继续离线使用。
+
+应用启动或重新切回前台时会自动检查 GitHub 上的新课程；顶部“更新”按钮也可以手动检查。新增课程时，将课程 JSON 放入 `data/modules/`、登记到 `data/modules/index.json`，并递增 `data/version.json` 的 `dataVersion`；提交并推送到 `main` 后，已安装应用会下载新课程并将其保存在设备，联网失败时仍可离线学习。仅课程数据更新不需要重新安装 APK；Android 原生界面或功能变化需要安装新版 APK。APK 从公开 GitHub 仓库下载更新数据。
 
 ## 如何更新内容
 
@@ -45,10 +47,10 @@ APK 输出在 `android-app/app/build/outputs/apk/debug/Study.apk`。本地构建
 
 ## 发布到 GitHub
 
-1. 将 `.android-user/debug.keystore` 转成 Base64，并保存为仓库 **Settings → Secrets and variables → Actions** 下的 `STUDY_DEBUG_KEYSTORE_BASE64` secret。
-2. 更新版本号后推送 `main`，再推送对应的 `v*` 标签，例如 `v0.2.6`。
-3. GitHub Pages 工作流自动部署网页；APK 工作流会把签名 APK 附加到同版本 GitHub Release。
-4. 首次启用网页发布时，在仓库的 **Settings → Pages** 中将部署来源设为 **GitHub Actions**。
+1. 更新版本号后用原有本机 keystore 构建 APK，并验证版本、签名与离线数据。不要提交签名密钥。
+2. 推送 `main`，以对应提交创建版本标签，例如 `v0.3.0`。
+3. 创建同版本 GitHub Release，上传本地构建并验证过的 `Study.apk`；仓库没有稳定签名 Secret 时使用此流程。
+4. APK 工作流只在稳定签名 Secret 已配置时自动发布；网页独立通过 GitHub Pages 工作流部署。
 
 ## 目录
 
@@ -67,6 +69,7 @@ scripts/extract_vocab.py   从 PDF 重新生成词库
 scripts/validate-content.mjs  构建前检查模块、章节、答案和解析
 scripts/build.mjs          发布构建
 scripts/server.mjs         本地开发服务器
+android-app/app/src/main/java/com/cet4/focus/  Android 原生界面与更新逻辑
 ```
 
 ## 数据来源
