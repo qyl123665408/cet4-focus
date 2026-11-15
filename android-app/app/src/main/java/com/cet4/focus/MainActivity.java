@@ -64,6 +64,7 @@ public class MainActivity extends Activity {
     private TextToSpeech textToSpeech;
     private boolean ttsReady;
     private boolean checkingUpdates;
+    private android.window.OnBackInvokedCallback backCallback;
 
     private LinearLayout root;
     private LinearLayout header;
@@ -121,9 +122,19 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setStatusBarColor(BG);
-        getWindow().setNavigationBarColor(BG);
-        getWindow().getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
+        int systemUi = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+        if (Build.VERSION.SDK_INT >= 26) {
+            getWindow().setNavigationBarColor(BG);
+            systemUi |= View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
+        } else {
+            getWindow().setNavigationBarColor(INK);
+        }
+        getWindow().getDecorView().setSystemUiVisibility(systemUi);
+        if (Build.VERSION.SDK_INT >= 33) {
+            backCallback = this::navigateBack;
+            getOnBackInvokedDispatcher().registerOnBackInvokedCallback(
+                    android.window.OnBackInvokedDispatcher.PRIORITY_DEFAULT, backCallback);
+        }
         repository = new StudyRepository(this);
         preferences = getSharedPreferences("study-native-state-v1", MODE_PRIVATE);
         loadProgress();
@@ -141,6 +152,9 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onDestroy() {
+        if (Build.VERSION.SDK_INT >= 33 && backCallback != null) {
+            getOnBackInvokedDispatcher().unregisterOnBackInvokedCallback(backCallback);
+        }
         if (textToSpeech != null) {
             textToSpeech.stop();
             textToSpeech.shutdown();
@@ -149,7 +163,12 @@ public class MainActivity extends Activity {
     }
 
     @Override
+    @android.annotation.SuppressLint("GestureBackNavigation") // API 33+ uses the callback registered in onCreate.
     public void onBackPressed() {
+        navigateBack();
+    }
+
+    private void navigateBack() {
         if ("quiz".equals(page)) {
             page = "practice";
             render();
@@ -163,7 +182,7 @@ public class MainActivity extends Activity {
             page = "modules";
             render();
         } else {
-            super.onBackPressed();
+            finish();
         }
     }
 
