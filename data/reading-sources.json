@@ -1,0 +1,80 @@
+{
+  "checkedAt": "2026-11-15",
+  "smallQuestionCount": 240,
+  "passageCount": 32,
+  "notice": "按套从来源网站获取，下载后保存在本机；不随 APK 或 GitHub 分发真题正文。答案为来源参考答案，不代表考试机构官方答案。",
+  "exams": [
+    {
+      "exam": "2023年12月 第1套",
+      "id": "202312-1",
+      "sourceUrl": "https://eol.nju.edu.cn/cet4/papers/202312-1.html",
+      "paperUrl": "https://eol.nju.edu.cn/cet4/papers/2023年12月英语四级真题 - 第1套.pdf",
+      "answerSourceUrl": "https://eol.nju.edu.cn/cet4/papers/2023年12月四级真题（第一套）·答案解析.pdf",
+      "sourceSha256": "5fc3c81277448d51346d6360815cd4d21087e19652598895ca932bb73b9ed3cc",
+      "questionCount": 30
+    },
+    {
+      "exam": "2023年12月 第3套",
+      "id": "202312-3",
+      "sourceUrl": "https://eol.nju.edu.cn/cet4/papers/202312-3.html",
+      "paperUrl": "https://eol.nju.edu.cn/cet4/papers/2023年12月英语四级真题 - 第3套.pdf",
+      "answerSourceUrl": "https://eol.nju.edu.cn/cet4/papers/2023年12月四级真题（第三套）·答案解析.pdf",
+      "sourceSha256": "ac06e723369d6bc4776e9a6e1bca217a51fcc60f45e5908d6d589e29dfceb12f",
+      "questionCount": 30
+    },
+    {
+      "exam": "2024年6月 第1套",
+      "id": "202406-1",
+      "sourceUrl": "https://eol.nju.edu.cn/cet4/papers/202406-1.html",
+      "paperUrl": "https://eol.nju.edu.cn/cet4/papers/2024年6月大学英语四级真题（第一套）_ 完整版精排.pdf",
+      "answerSourceUrl": "https://eol.nju.edu.cn/cet4/papers/2024年6月四级真题（第一套）·答案解析.pdf",
+      "sourceSha256": "93cf412f77aab8f48c42f4808bc8e466959ebb643c2b778b0f24778308491a31",
+      "questionCount": 30
+    },
+    {
+      "exam": "2024年6月 第2套",
+      "id": "202406-2",
+      "sourceUrl": "https://eol.nju.edu.cn/cet4/papers/202406-2.html",
+      "paperUrl": "https://eol.nju.edu.cn/cet4/papers/2024年6月大学英语四级真题（第二套）_ 完整版精排.pdf",
+      "answerSourceUrl": "https://eol.nju.edu.cn/cet4/papers/2024年6月四级真题（第二套）·答案解析.pdf",
+      "sourceSha256": "44da5975253472f978b1f48cc2b542cf9d961064d9c80382fb3ca4fc23d82b15",
+      "questionCount": 30
+    },
+    {
+      "exam": "2024年6月 第3套",
+      "id": "202406-3",
+      "sourceUrl": "https://eol.nju.edu.cn/cet4/papers/202406-3.html",
+      "paperUrl": "https://eol.nju.edu.cn/cet4/papers/2024年6月大学英语四级真题（第三套）_ 完整版精排.pdf",
+      "answerSourceUrl": "https://eol.nju.edu.cn/cet4/papers/2024年6月四级真题（第三套）·答案解析.pdf",
+      "sourceSha256": "446595f730da0377e0bd9017fb926c357fdc8af60feedddc5cf6f0cc57d88560",
+      "questionCount": 30
+    },
+    {
+      "exam": "2024年12月 第1套",
+      "id": "202412-1",
+      "sourceUrl": "https://eol.nju.edu.cn/cet4/papers/202412-1.html",
+      "paperUrl": "https://eol.nju.edu.cn/cet4/papers/2024年12月大学英语四级真题（第一套）_ 完整版精排.pdf",
+      "answerSourceUrl": "https://eol.nju.edu.cn/cet4/papers/2024年12月四级真题（第一套）·答案解析.pdf",
+      "sourceSha256": "5f26bb1a171a9229ea2356c6e297d7b8ba59379e9cba0d2425c5a84c894cc7b9",
+      "questionCount": 30
+    },
+    {
+      "exam": "2024年12月 第2套",
+      "id": "202412-2",
+      "sourceUrl": "https://eol.nju.edu.cn/cet4/papers/202412-2.html",
+      "paperUrl": "https://eol.nju.edu.cn/cet4/papers/2024年12月大学英语四级真题（第二套）_ 完整版精排.pdf",
+      "answerSourceUrl": "https://eol.nju.edu.cn/cet4/papers/2024年12月四级真题（第二套）·答案解析.pdf",
+      "sourceSha256": "5293af33f1c3acd389fdc6dd763a6721ebf2d843a8f0278af1eadae0a68e6ad8",
+      "questionCount": 30
+    },
+    {
+      "exam": "2024年12月 第3套",
+      "id": "202412-3",
+      "sourceUrl": "https://eol.nju.edu.cn/cet4/papers/202412-3.html",
+      "paperUrl": "https://eol.nju.edu.cn/cet4/papers/2024年12月大学英语四级真题（第三套）_ 完整版精排.pdf",
+      "answerSourceUrl": "https://eol.nju.edu.cn/cet4/papers/2024年12月四级真题（第三套）·答案解析.pdf",
+      "sourceSha256": "ecc19d01011323566a0ecdab1a46c66dde67012a7f8764f70c10be325df52725",
+      "questionCount": 30
+    }
+  ]
+}
